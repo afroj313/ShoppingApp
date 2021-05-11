@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "1088745329480",
+    "firebase_url": "https://internship2021-e5fe1-default-rtdb.firebaseio.com",
+    "project_id": "internship2021-e5fe1",
+    "storage_bucket": "internship2021-e5fe1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1088745329480:android:b48a5aa69b0b269a5d197d",
+        "android_client_info": {
+          "package_name": "com.example.onlineshoppingapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1088745329480-fgb04sna1j35g92ok77ipaburfbea1vl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtN-ZGAQef6IY5q6ZaYvgAGBbgZWoNam8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1088745329480-fgb04sna1j35g92ok77ipaburfbea1vl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1088745329480:android:d1e00b03d64c65e65d197d",
+        "android_client_info": {
+          "package_name": "com.example.shoppingapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1088745329480-fgb04sna1j35g92ok77ipaburfbea1vl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtN-ZGAQef6IY5q6ZaYvgAGBbgZWoNam8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1088745329480-fgb04sna1j35g92ok77ipaburfbea1vl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
