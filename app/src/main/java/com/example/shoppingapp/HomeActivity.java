@@ -1,7 +1,11 @@
 package com.example.shoppingapp;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +27,7 @@ import com.squareup.picasso.Picasso;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.GravityCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -44,12 +49,29 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             private RecyclerView recyclerView;
             RecyclerView.LayoutManager layoutManager;
 
+            private String type="";
+
+
+            SharedPreferences sharedPreferences;
+            public static final String fileName="login";
+            public static final String phonenum="username";
+            public static final String pass="password";
 
             @Override
             protected void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
                 setContentView(R.layout.activity_home);
 
+
+                Intent intent=getIntent();
+                Bundle bundle=intent.getExtras();
+                if (bundle!=null)
+                {
+                    type=getIntent().getExtras().get("Admin").toString();
+
+                }
+
+                sharedPreferences=getSharedPreferences(fileName, Context.MODE_PRIVATE);
 
                 ProductsRef = FirebaseDatabase.getInstance().getReference().child("Products");
 
@@ -58,23 +80,31 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 
                 Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-                toolbar.setTitle("Home");
-                setSupportActionBar(toolbar);
+               toolbar.setTitle("Home");
+
+               setSupportActionBar(toolbar);
+
 
 
                 FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
                 fab.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
+
+                        if(!type.equals("Admin")) {
+
+
+                            Intent intent = new Intent(HomeActivity.this, CartActivity.class);
+                            startActivity(intent);
+                        }
                     }
                 });
 
 
+
                 DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
                 ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                        this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                        this, drawer,toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
                 drawer.addDrawerListener(toggle);
                 toggle.syncState();
 
@@ -86,8 +116,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 TextView userNameTextView = headerView.findViewById(R.id.user_profile_name);
                 CircleImageView profileImageView = headerView.findViewById(R.id.user_profile_image);
 
-                userNameTextView.setText(Prevalent.currentOnlineUser.getName());
-                Picasso.get().load(Prevalent.currentOnlineUser.getImage()).placeholder(R.drawable.profile).into(profileImageView);
+                if(!type.equals("Admin")) {
+                    if (!(Prevalent.currentOnlineUser.getName().equals("") && Prevalent.currentOnlineUser.getImage().equals(""))) {
+                        userNameTextView.setText(Prevalent.currentOnlineUser.getName());
+                         Picasso.get().load(Prevalent.currentOnlineUser.getImage()).placeholder(R.drawable.profile).into(profileImageView);
+                    }
+                }
 
 
                 recyclerView = findViewById(R.id.recycler_menu);
@@ -116,6 +150,32 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                                 holder.txtProductDescription.setText(model.getDescription());
                                 holder.txtProductPrice.setText("Price = " + model.getPrice() + "$");
                                 Picasso.get().load(model.getImage()).into(holder.imageView);
+
+
+
+                                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+
+                                        if(type.equals("Admin"))
+                                        {
+
+                                            Intent intent = new Intent(HomeActivity.this, AdminMaintainProductsActivity.class);
+                                            intent.putExtra("pid", model.getPid());
+                                            startActivity(intent);
+
+
+                                        }
+                                        else {
+
+
+                                            Intent intent = new Intent(HomeActivity.this, ProductsDetailsActivity.class);
+                                            intent.putExtra("pid", model.getPid());
+                                            startActivity(intent);
+                                        }
+                                    }
+                                });
+
                             }
 
                             @NonNull
@@ -133,15 +193,53 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onBackPressed() {
+                /*
                 DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
                 if (drawer.isDrawerOpen(GravityCompat.START)) {
                     drawer.closeDrawer(GravityCompat.START);
                 } else {
                     super.onBackPressed();
                 }
+
+                 */
+
+
+                if(!type.equals("Admin")) {
+                    new AlertDialog.Builder(this)
+                            .setMessage("Do you really want to exist?")
+                            .setNegativeButton(android.R.string.no, null)
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    if (which == 0) {
+                                        finish();
+                                    } else {
+
+                                        SharedPreferences.Editor editor=sharedPreferences.edit();
+                                        editor.clear();
+                                        editor.commit();
+
+
+                                        Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(intent);
+                                        finish();
+                                    }
+
+                                }
+                            }).create().show();
+
+                }
+                else {
+                    DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                    if (drawer.isDrawerOpen(GravityCompat.START)) {
+                        drawer.closeDrawer(GravityCompat.START);
+                    } else {
+                        super.onBackPressed();
+                    }
+                }
             }
-
-
 
             @Override
             public boolean onCreateOptionsMenu(Menu menu) {
@@ -177,32 +275,105 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 if (id == R.id.nav_cart)
                 {
 
+                    if(!type.equals("Admin")) {
+
+                        Intent intent= new Intent(HomeActivity.this,CartActivity.class);
+                        startActivity(intent);
+
+                    }
+
+
+
+
+
+
+
                 }
-                else if (id == R.id.nav_orders)
+                else if (id == R.id.nav_search)
                 {
+
+                    if(!type.equals("Admin")) {
+
+                        Intent intent= new Intent(HomeActivity.this,SearchProductActivity.class);
+                        startActivity(intent);
+
+                    }
+
+
 
                 }
                 else if (id == R.id.nav_categories)
                 {
 
+                    if(!type.equals("Admin")) {
+
+
+
+                    }
+
                 }
                 else if (id == R.id.nav_settings)
                 {
-                    Intent intent = new Intent(HomeActivity.this, SettingActivity.class);
-                    startActivity(intent);
+                    if(!type.equals("Admin")) {
+
+                        Intent intent = new Intent(HomeActivity.this, SettingActivity.class);
+                        startActivity(intent);
+
+                    }
+
+
                 }
                 else if (id == R.id.nav_logout)
                 {
-                    Paper.book().destroy();
+                    if(!type.equals("Admin")) {
 
-                    Intent intent = new Intent(HomeActivity.this, MainActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                    finish();
+
+                        new AlertDialog.Builder(this)
+                                .setMessage("Do you really want to exist?")
+                                .setNegativeButton(android.R.string.no,null)
+                                .setPositiveButton(android.R.string.yes,new DialogInterface.OnClickListener() {
+
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        if (which ==0)
+                                        {
+                                            finish();
+                                        }
+                                        else {
+
+                                            SharedPreferences.Editor editor=sharedPreferences.edit();
+                                            editor.clear();
+                                            editor.commit();
+
+
+                                            Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                            startActivity(intent);
+                                            finish();
+                                        }
+
+                                    }
+                                }).create().show();
+
+
+
+
+
+                        Paper.book().destroy();
+
+
+                        //Intent intent = new Intent(HomeActivity.this, MainActivity.class);
+
+
+
+                    }
+
+
                 }
 
                 DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
                 drawer.closeDrawer(GravityCompat.START);
                 return true;
             }
+
 }

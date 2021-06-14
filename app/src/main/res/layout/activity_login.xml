@@ -106,7 +106,7 @@
         android:layout_marginTop="5dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:background="@drawable/buttons"
+
         android:padding="17dp"
         android:backgroundTint="@color/colorbackgroundtint"
         android:textAllCaps="false"

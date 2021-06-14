@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,8 +27,10 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     private Button CreateAccountButton;
-    private EditText InputName, InputPhoneNumber, InputPassword;
+    private EditText InputName, InputPhoneNumber, InputPassword,InputSecurityquetion;
     private ProgressDialog loadingBar;
+    private TextView security;
+
 
 
     @Override
@@ -42,6 +45,8 @@ public class RegisterActivity extends AppCompatActivity {
         InputPassword = (EditText) findViewById(R.id.register_password_input);
         InputPhoneNumber = (EditText) findViewById(R.id.register_phone_number_input);
         loadingBar = new ProgressDialog(this);
+        InputSecurityquetion=(EditText) findViewById(R.id.security_quetion);
+        security=(TextView)findViewById(R.id.security);
 
 
         CreateAccountButton.setOnClickListener(new View.OnClickListener() {
@@ -60,6 +65,8 @@ public class RegisterActivity extends AppCompatActivity {
         String name = InputName.getText().toString();
         String phone = InputPhoneNumber.getText().toString();
         String password = InputPassword.getText().toString();
+        String securityquetion=InputSecurityquetion.getText().toString();
+        int len=phone.length();
 
         if (TextUtils.isEmpty(name))
         {
@@ -75,18 +82,25 @@ public class RegisterActivity extends AppCompatActivity {
         }
         else
         {
-            loadingBar.setTitle("Create Account");
-            loadingBar.setMessage("Please wait, while we are checking the credentials.");
-            loadingBar.setCanceledOnTouchOutside(false);
-            loadingBar.show();
 
-            ValidatephoneNumber(name, phone, password);
+            if(len==10) {
+                loadingBar.setTitle("Create Account");
+                loadingBar.setMessage("Please wait, while we are checking the credentials.");
+                loadingBar.setCanceledOnTouchOutside(false);
+                loadingBar.show();
+
+                ValidatephoneNumber(name, phone, password,securityquetion);
+            }
+            else {
+
+                Toast.makeText(RegisterActivity.this, "Please enter 10 digit valid number...", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
 
 
-    private void ValidatephoneNumber(final String name, final String phone, final String password)
+    private void ValidatephoneNumber(final String name, final String phone, final String password,final String securityquetion)
     {
         final DatabaseReference RootRef;
         RootRef = FirebaseDatabase.getInstance().getReference();
@@ -101,6 +115,7 @@ public class RegisterActivity extends AppCompatActivity {
                     userdataMap.put("phone", phone);
                     userdataMap.put("password", password);
                     userdataMap.put("name", name);
+                    userdataMap.put("Security Quetion", securityquetion);
 
                     RootRef.child("Users").child(phone).updateChildren(userdataMap)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {

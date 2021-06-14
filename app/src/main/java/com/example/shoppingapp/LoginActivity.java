@@ -4,9 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import com.rey.material.widget.CheckBox;
@@ -29,11 +33,16 @@ public class LoginActivity extends AppCompatActivity {
     private EditText InputPhoneNumber, InputPassword;
     private Button LoginButton;
     private ProgressDialog loadingBar;
-    private TextView AdminLink, NotAdminLink;
+    private TextView AdminLink, NotAdminLink,forgetpassword;
 
     private String parentDbName = "Users";
     private CheckBox chkBoxRememberMe;
 
+   SharedPreferences sharedPreferences;
+
+   public static final String fileName="login";
+    public static final String phonenum="username";
+    public static final String pass="password";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -46,9 +55,11 @@ public class LoginActivity extends AppCompatActivity {
         InputPassword = (EditText) findViewById(R.id.login_password_input);
         InputPhoneNumber = (EditText) findViewById(R.id.login_phone_number_input);
         AdminLink = (TextView) findViewById(R.id.admin_panel_link);
+        forgetpassword = (TextView) findViewById(R.id.forget_password_link);
         NotAdminLink = (TextView) findViewById(R.id.not_admin_panel_link);
         loadingBar = new ProgressDialog(this);
 
+        sharedPreferences=getSharedPreferences(fileName, Context.MODE_PRIVATE);
 
         chkBoxRememberMe = (CheckBox) findViewById(R.id.remember_me_chkb);
         Paper.init(this);
@@ -73,6 +84,17 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        forgetpassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent=new Intent(LoginActivity.this,ResetPasswordActivity.class);
+                intent.putExtra("check","login");
+                startActivity(intent);
+
+            }
+        });
+
         NotAdminLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)
@@ -83,6 +105,13 @@ public class LoginActivity extends AppCompatActivity {
                 parentDbName = "Users";
             }
         });
+
+        if(sharedPreferences.contains(phonenum)&&sharedPreferences.contains(pass))
+        {
+            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+            startActivity(intent);
+
+        }
     }
 
 
@@ -141,16 +170,27 @@ public class LoginActivity extends AppCompatActivity {
                         {
                             if (parentDbName.equals("Admins"))
                             {
+
+
                                 Toast.makeText(LoginActivity.this, "Welcome Admin, you are logged in Successfully...", Toast.LENGTH_SHORT).show();
                                 loadingBar.dismiss();
+
 
                                 Intent intent = new Intent(LoginActivity.this, AdminCategoryActivity.class);
                                 startActivity(intent);
                             }
                             else if (parentDbName.equals("Users"))
                             {
+
+
+                                SharedPreferences.Editor editor=sharedPreferences.edit();
+                                editor.putString(phonenum,phone);
+                                editor.putString(pass,password);
+                                editor.commit();
                                 Toast.makeText(LoginActivity.this, "logged in Successfully...", Toast.LENGTH_SHORT).show();
                                 loadingBar.dismiss();
+
+
 
                                 Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                                 Prevalent.currentOnlineUser = usersData;

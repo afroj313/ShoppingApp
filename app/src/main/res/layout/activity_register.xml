@@ -15,9 +15,26 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="130dp"
+        android:layout_marginTop="30dp"
         android:src="@drawable/applogo"
         android:layout_marginLeft="20dp" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/security"
+        android:id="@+id/security_quetion"
+
+        android:background="@drawable/input_design"
+        android:padding="20dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:hint="Enter your favourite Sports person "
+        android:inputType="text"
+        android:textColor="@color/colorPrimaryDark"
+        android:backgroundTint="@color/colorbackgroundtint"
+        android:textColorHint="@color/colorPrimaryDark"
+        android:textSize="15sp"
+        />
 
     <EditText
         android:id="@+id/register_username_input"
@@ -54,6 +71,23 @@
         android:backgroundTint="@color/colorbackgroundtint"
         />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/security"
+        android:text="Please set security quetion"
+        android:layout_below="@+id/register_password_input"
+
+        android:padding="20dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:hint="Enter your favourite Sports person "
+        android:inputType="text"
+        android:textColor="@color/white"
+
+        android:textColorHint="@color/colorPrimaryDark"
+        android:textSize="15sp"
+        />
 
     <EditText
         android:id="@+id/register_password_input"
@@ -78,16 +112,17 @@
         android:id="@+id/register_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/register_password_input"
+        android:layout_below="@+id/security_quetion"
         android:layout_marginTop="5dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:background="@drawable/buttons"
+
         android:padding="17dp"
         android:textAllCaps="false"
         android:textSize="15sp"
         android:text="Create Account"
         android:textColor="@android:color/white"
+
         android:backgroundTint="@color/colorbackgroundtint"
         />
 

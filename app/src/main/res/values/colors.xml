@@ -12,5 +12,6 @@
     <color name="colorPrimary">#BF007A</color>
     <color name="colorPrimaryDark">#ff69b4</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="colorbackgroundtint">#20000000</color>
+    <color name="colorbackgroundtint">#30000000</color>
+    <color name="colorbackgroundtint1">#80000000</color>
 </resources>

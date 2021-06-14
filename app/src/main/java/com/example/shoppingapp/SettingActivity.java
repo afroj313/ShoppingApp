@@ -4,11 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,6 +41,7 @@ public class SettingActivity extends AppCompatActivity {
     private EditText fullNameEditText, userPhoneEditText, addressEditText;
     private TextView profileChangeTextBtn,  closeTextBtn, saveTextButton;
 
+    private Button SecurityQetionBtn;
     private Uri imageUri;
     private String myUrl = "";
     private StorageTask uploadTask;
@@ -61,6 +64,7 @@ public class SettingActivity extends AppCompatActivity {
         profileChangeTextBtn = (TextView) findViewById(R.id.profile_image_change_btn);
         closeTextBtn = (TextView) findViewById(R.id.close_settings_btn);
         saveTextButton = (TextView) findViewById(R.id.update_account_settings_btn);
+        SecurityQetionBtn=(Button)findViewById(R.id.security_quetions_btn);
 
 
         userInfoDisplay(profileImageView, fullNameEditText, userPhoneEditText, addressEditText);
@@ -102,6 +106,14 @@ public class SettingActivity extends AppCompatActivity {
                         .start(SettingActivity.this);
             }
         });
+        SecurityQetionBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(SettingActivity.this,ResetPasswordActivity.class);
+                intent.putExtra("check","settings");
+                startActivity(intent);
+            }
+        });
     }
 
 
@@ -127,7 +139,7 @@ public class SettingActivity extends AppCompatActivity {
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode== CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE  &&  resultCode==RESULT_OK  &&  data!=null)
+        if (requestCode==CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE  &&  resultCode==RESULT_OK  &&  data!=null)
         {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             imageUri = result.getUri();
@@ -214,15 +226,20 @@ public class SettingActivity extends AppCompatActivity {
 
                                 progressDialog.dismiss();
 
-                                startActivity(new Intent(SettingActivity.this, MainActivity.class));
                                 Toast.makeText(SettingActivity.this, "Profile Info update successfully.", Toast.LENGTH_SHORT).show();
-                                finish();
+
+
+
+
                             }
                             else
                             {
                                 progressDialog.dismiss();
                                 Toast.makeText(SettingActivity.this, "Error.", Toast.LENGTH_SHORT).show();
                             }
+
+                            Intent intent=new Intent(SettingActivity.this,HomeActivity.class);
+                            startActivity(intent);
                         }
                     });
         }
@@ -264,6 +281,5 @@ public class SettingActivity extends AppCompatActivity {
             }
         });
     }
-
 
 }
